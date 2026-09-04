@@ -1,0 +1,41 @@
+import Auth from "./Auth.js";
+import RepositoryFactoryInterface from "../../../domain/Interfaces/RepositoryFactoryInterface.js";
+import UserRepositoryInterface from "../../../domain/Interfaces/UserRepositoryInterface.js";
+import jwt from "jsonwebtoken"
+
+const { verify } = jwt
+
+export default class ExpressAuth implements Auth {
+
+    protected userRepository: UserRepositoryInterface;
+
+    constructor(repositoryFactory: RepositoryFactoryInterface) {
+        this.userRepository = repositoryFactory.createUserRepository();
+    }
+    
+    async execute(request: any, response: any, next: any): Promise<any> {
+        
+        const token = request.cookies?.['access-token'] ?? request.headers['access-token'];
+
+        if (!token) {
+            return response.status(403).json({
+                message: 'Token is required'
+            });
+        }
+
+        try {
+            const publicKey = (process.env.JWT_PUBLIC_KEY ?? "").replace(/\\n/g, "\n");
+            const data = verify(token, publicKey, { algorithms: ["RS256"] }) as { userId: string; userRole: string };
+            const user = await this.userRepository.findById(data.userId);
+            request.user = user;
+            request.userRole = data.userRole;
+            return next();
+        
+        } catch (e) {
+            return response.status(401).json({
+                message: 'Invalid token'
+            });
+        }
+    }
+
+}

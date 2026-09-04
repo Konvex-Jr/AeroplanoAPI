@@ -1,0 +1,9 @@
+node_modules/
+dist/
+public.key
+private.key
+package-lock.json
+coverage/
+.env
+todo.md
+docker-compose.yml

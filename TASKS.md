@@ -7,9 +7,9 @@
 
 - [X] Criar Post
 - [X] Atualizar Post
-- [ ] Excluir Post
+- [X] Excluir Post
 
-- [ ] Visualizar Todos os Posts
+- [X] Visualizar Todos os Posts
 
 ## Revisar Controladores
 

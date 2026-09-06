@@ -6,9 +6,9 @@ export default class CreateUsersTable {
     async up(): Promise<void> {
         await this.connection.execute(`
             CREATE TABLE IF NOT EXISTS users ( 
-                id       UUID PRIMARY KEY, 
-                email    TEXT NOT NULL UNIQUE, 
-                password TEXT NOT NULL 
+                id        UUID PRIMARY KEY, 
+                email     TEXT NOT NULL UNIQUE, 
+                password  TEXT NOT NULL
             );`);
     }
 

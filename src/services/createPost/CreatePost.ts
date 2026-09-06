@@ -28,8 +28,9 @@ export default class CreatePost {
 
     async execute(input: CreatePostInput): Promise<CreatePostOutput> {
         
-        if (!input.title)   throw new AppError("Título é obrigatório.");
-        if (!input.content) throw new AppError("Conteúdo é obrigatório.");
+        if (!input.title)   throw new AppError("Title is required.");
+        
+        if (!input.content) throw new AppError("Content is required.");
 
         const post = new Post(
             input.title,

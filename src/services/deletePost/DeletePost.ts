@@ -1,8 +1,14 @@
 import AppError from "../../domain/AppError.js";
-import DeletePostInput from "./DeletePostInput.js";
-import DeletePostOutput from "./DeletePostOutput.js";
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface.js";
 import PostRepositoryInterface from "../../domain/Interfaces/PostRepositoryInterface.js";
+
+export interface DeletePostInput {
+    id: string;
+}
+
+export interface DeletePostOutput {
+    message: string
+}
 
 export default class DeletePost {
 
@@ -14,20 +20,18 @@ export default class DeletePost {
 
     async execute(input: DeletePostInput): Promise<DeletePostOutput> {
         
-        if (input.userRole !== 'admin') throw new AppError("Acesso restrito ao administrador");
-
-        const id = input.id;
+        const { id } = input
 
         const REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
-        if(!REGEX.test(input.id)) throw new AppError("Formato de ID incorreto")
+        if(!REGEX.test(id)) throw new AppError("Post not found.")
 
-        if(!(await this.postRepository.findById(id))) throw new AppError("Post não encontrado")
+        if(!(await this.postRepository.findById(id))) throw new AppError("Post not found.")
 
         await this.postRepository.delete(id)
 
         return {
-            message: "Post deletado com sucesso"
+            message: "Deleted Successfully."
         }
     }
 

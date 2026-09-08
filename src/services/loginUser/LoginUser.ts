@@ -29,11 +29,13 @@ export default class LoginUser {
         
         const user = await this.userRepository.findByEmailWithPassword(input.email);
 
-        // Always run bcrypt.compare to prevent email enumeration via timing
+        // Run hashing to prevent USER ENUMERATION
+
         const dummyHash = await hash("dummy", 10);
+        
         const isEqual = user ? await compare(input.password, user.password) : await compare(input.password, dummyHash);
 
-        if (!user || !isEqual) throw new AppError("Email ou senha inválidos");
+        if (!user || !isEqual) throw new AppError("Invalid email and/or password.");
         
         const privateKey = (process.env.JWT_PRIVATE_KEY ?? "").replace(/\\n/g, "\n");
         

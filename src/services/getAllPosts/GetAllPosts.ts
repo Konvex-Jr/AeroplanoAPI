@@ -1,7 +1,11 @@
 import AppError from "../../domain/AppError.js";
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface.js";
 import PostRepositoryInterface from "../../domain/Interfaces/PostRepositoryInterface.js";
-import GetAllPostsOutput from "./GetAllPostsOutput.js";
+import Post from "@/domain/Entity/Post.js";
+
+export interface GetAllPostsOutput {
+    data: Post[];
+}
 
 export default class GetAllPosts {
 
@@ -15,7 +19,7 @@ export default class GetAllPosts {
         
         const response = await this.postRepository.getAll()
         
-        if(!response.length) throw new AppError("Não há posts")
+        if(!response.length) throw new AppError("There's no Posts.")
     
         return { 
             data: response 

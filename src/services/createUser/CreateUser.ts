@@ -31,23 +31,23 @@ export default class CreateUser {
         
         const { email, password } = input
 
-        if (password.length < 8) throw new AppError("A senha deve ter no mínimo 8 caracteres.");
+        if (password.length < 8) throw new AppError("Password must contain at least 8 characters.");
 
-        const existing = await this.userRepository.findByEmail(input.email);
+        const existing = await this.userRepository.findByEmail(email);
 
-        if (existing) throw new AppError("Não foi possível criar a conta. Verifique os dados e tente novamente.");
+        if (existing) throw new AppError("Unable to create account. Check details and try again.");
 
-        const encryptPassword = await hash(input.password, 12);
+        const encrypt_password = await hash(password, 12);
 
-        const user = new User(input.email, encryptPassword);
+        const user = new User(email, encrypt_password);
 
         await this.userRepository.create(user);
 
         const privateKey = (env.JWT_PRIVATE_KEY ?? "").replace(/\\n/g, "\n");
 
         const payload = {
-            userId: user.id,
-            userEmail: user.email,
+            user_id: user.id,
+            user_email: user.email,
         }
         
         const access_token = sign(payload, privateKey, {

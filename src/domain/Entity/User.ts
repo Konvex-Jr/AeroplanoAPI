@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+
 export default class User {
 
     readonly id: string;
@@ -7,7 +8,7 @@ export default class User {
 
     constructor (
         email: string, 
-        password: string, 
+        password: string,
         id?: string) {
 
         if (!id) id = randomUUID();
@@ -15,6 +16,5 @@ export default class User {
         this.id = id;
         this.email = email;
         this.password = password;
-
     }
 }

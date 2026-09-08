@@ -2,6 +2,8 @@ import Auth from "./Auth.js";
 import RepositoryFactoryInterface from "../../../domain/Interfaces/RepositoryFactoryInterface.js";
 import UserRepositoryInterface from "../../../domain/Interfaces/UserRepositoryInterface.js";
 import jwt from "jsonwebtoken"
+import { getAccessToken } from "@/infra/utils/getAccessToken.js";
+import { Request, Response } from "express"
 
 const { verify } = jwt
 
@@ -13,27 +15,34 @@ export default class ExpressAuth implements Auth {
         this.userRepository = repositoryFactory.createUserRepository();
     }
     
-    async execute(request: any, response: any, next: any): Promise<any> {
+    async execute(req: Request, res: Response, next: any): Promise<any> {
         
-        const token = request.cookies?.['access-token'] ?? request.headers['access-token'];
+        const token = getAccessToken(req);
 
         if (!token) {
-            return response.status(403).json({
-                message: 'Token is required'
+            return res.status(403).json({
+                message: 'Token is Required.'
             });
         }
 
         try {
+            
             const publicKey = (process.env.JWT_PUBLIC_KEY ?? "").replace(/\\n/g, "\n");
-            const data = verify(token, publicKey, { algorithms: ["RS256"] }) as { userId: string; userRole: string };
-            const user = await this.userRepository.findById(data.userId);
-            request.user = user;
-            request.userRole = data.userRole;
+            
+            const { userId, userEmail } = verify(token, publicKey, { algorithms: ["RS256"] }) as { userId: string; userEmail: string };
+            const user = await this.userRepository.findById(userId);
+            
+            if(!user){
+                return res.status(403).json({ message: "Unauthorized." })
+            }
+
+            res.locals = { userId, userEmail }
+
             return next();
         
         } catch (e) {
-            return response.status(401).json({
-                message: 'Invalid token'
+            return res.status(401).json({
+                message: 'Invalid Token.'
             });
         }
     }

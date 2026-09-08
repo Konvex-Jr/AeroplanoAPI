@@ -1,3 +1,4 @@
+import { NULL } from "@/infra/http/schemas.js"
 import { randomUUID } from "node:crypto"
 
 export default class Post {
@@ -5,7 +6,7 @@ export default class Post {
     readonly id: string
 
     readonly title: string
-    readonly image: Buffer
+    readonly image: Buffer | NULL
     readonly content: string
     readonly file_size: number
     readonly file_type: string
@@ -17,7 +18,7 @@ export default class Post {
 
     constructor (
         title: string,
-        image: Buffer,
+        image: Buffer | NULL,
         content: string,
         file_size: number,
         file_type: string,
@@ -27,7 +28,8 @@ export default class Post {
         id?: string) {
 
             if (!id) id = randomUUID()
-            
+            if(!image) image = null
+
             this.id = id
             this.title = title
             this.image = image

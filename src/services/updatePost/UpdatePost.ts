@@ -2,12 +2,13 @@ import AppError from "../../domain/AppError.js";
 import Post from "../../domain/Entity/Post.js";
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface.js";
 import PostRepositoryInterface from "../../domain/Interfaces/PostRepositoryInterface.js";
+import { UNDEFINED } from "@/infra/http/schemas.js";
 
 export interface UpdatePostInput {
     id: string
-    title: string
-    image: Buffer
-    content: string
+    title?: string | UNDEFINED
+    image?: Buffer | UNDEFINED
+    content?: string | UNDEFINED
 }
 
 export interface UpdatePostOutput {

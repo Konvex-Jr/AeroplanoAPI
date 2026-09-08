@@ -2,10 +2,11 @@ import AppError from "../../domain/AppError.js";
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface.js";
 import PostRepositoryInterface from "../../domain/Interfaces/PostRepositoryInterface.js";
 import Post from "../../domain/Entity/Post.js";
+import { NULL } from "@/infra/http/schemas.js";
 
 export interface CreatePostInput {
     title: string
-    image: Buffer
+    image: Buffer | NULL
     content: string
     file_size: number
     file_type: string
@@ -27,20 +28,22 @@ export default class CreatePost {
     }
 
     async execute(input: CreatePostInput): Promise<CreatePostOutput> {
+
+        const { title, image, content, file_size, file_type, created_at, updated_at, user_id } = input
         
-        if (!input.title)   throw new AppError("Title is required.");
+        if (!title)   throw new AppError("Title is required.");
         
-        if (!input.content) throw new AppError("Content is required.");
+        if (!content) throw new AppError("Content is required.");
 
         const post = new Post(
-            input.title,
-            input.image,
-            input.content,
-            input.file_size,
-            input.file_type,
-            new Date(),
-            new Date(),
-            input.user_id
+            title,
+            image,
+            content,
+            file_size,
+            file_type,
+            created_at,
+            updated_at,
+            user_id
         );
 
         await this.postRepository.save(post);

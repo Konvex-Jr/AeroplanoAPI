@@ -10,7 +10,7 @@ export interface DeletePostOutput {
     message: string
 }
 
-export default class DeletePost {
+export class DeletePost {
 
     readonly postRepository: PostRepositoryInterface;
 

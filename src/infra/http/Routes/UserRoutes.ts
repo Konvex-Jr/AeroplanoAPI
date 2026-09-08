@@ -3,8 +3,8 @@ import RepositoryFactory from "../../../domain/Interfaces/RepositoryFactoryInter
 import UserController from "../../controller/UserController.js";
 import Http from "../Http.js";
 import ModelRoutes from "./ModelRoutes.js";
-import adminAuth from "../middlewares/AdminAuth.js";
-import { RegisterSchema, LoginSchema, UpdateUsernameSchema } from "../schemas.js";
+import adminAuth from "../middlewares/UserAuth.js";
+import { RegisterSchema, LoginSchema } from "../schemas.js";
 
 export default class UserRoutes implements ModelRoutes {
 
@@ -42,23 +42,5 @@ export default class UserRoutes implements ModelRoutes {
             res.json({ message: "Login realizado com sucesso" });
             return null;
         });
-    
-        // GET USERS — admin only
-        // this.http.route("get", "/api/users", true, async () => {
-        //     return this.userController.getAll();
-        // }, adminAuth)
-
-        // GET USER BY ID
-        // this.http.route("get", "/api/users/:userId", true, async (params: any, body: any) => {
-        //     return this.userController.findById(params);
-        // })
-
-        // UPDATE USERNAME - authenticated user updates own username
-        // this.http.route("patch", "/api/users/:userId/username", true, async (params: any, body: any, user: any) => {
-        //     if (user.id !== params.userId) throw new AppError("Sem permissão para alterar este usuário");
-        //     const parsed = UpdateUsernameSchema.safeParse(body);
-        //     if (!parsed.success) throw new AppError("Erro ao atualizar usuário.");
-        //     return this.userController.updateUsername(params.userId, parsed.data.username);
-        // })
     }
 }

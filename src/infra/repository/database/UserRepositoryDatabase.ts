@@ -11,7 +11,6 @@ export default class UserRepositoryDatabase implements UserRepositoryInterface {
         return await this.findById(user.id);
     }
 
-    // [ ] Implement Deletion
     async delete(user_id: string): Promise<void> {
         await this.connection.execute("DELETE FROM users WHERE $id = $1;", [ user_id ])
     }
@@ -28,7 +27,7 @@ export default class UserRepositoryDatabase implements UserRepositoryInterface {
 
     async findByEmailWithPassword(email: string): Promise<User | null> {
         const result = await this.connection.execute("SELECT id, email, password FROM users WHERE email = $1;", [ email ]);
-        return result?.[0] ? new User(result[0].id, result[0].email, result[0].password) : null;
+        return result ? new User(result[0].id, result[0].email, result[0].password) : null;
     }
 
     async getAll(): Promise<User[]> {

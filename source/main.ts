@@ -6,9 +6,7 @@ import DatabaseRepositoryFactory from "./infra/repository/DatabaseRepositoryFact
 import ExpressAuth from "./infra/http/Middleware/AuthExpress";
 import CreateUsersTable from "./infra/migrations/01.create_users_table";
 import CreatePostsTable from "./infra/migrations/02.create_posts_table";
-import CreatePartnerPostsTable from "./infra/migrations/03.create_partner_posts_table";
 import CreatePostContentsTable from "./infra/migrations/04.create_post_contents_table";
-import CreatePartnerPostContentsTable from "./infra/migrations/05.create_partner_post_contents_table";
 import BackfillUsernames from "./infra/migrations/06.backfill_usernames";
 
 config();
@@ -25,13 +23,11 @@ console.log({
 
 async function runMigrations(connection: PostgreSQLConnection) {
   console.log("\n📦 Executando migrations...");
-  
+
   const migrations = [
     { name: "users", instance: new CreateUsersTable(connection) },
     { name: "posts", instance: new CreatePostsTable(connection) },
-    { name: "partner_posts", instance: new CreatePartnerPostsTable(connection) },
     { name: "post_contents", instance: new CreatePostContentsTable(connection) },
-    { name: "partner_post_contents", instance: new CreatePartnerPostContentsTable(connection) },
     { name: "backfill_usernames", instance: new BackfillUsernames(connection) }
   ];
 
@@ -45,7 +41,7 @@ async function runMigrations(connection: PostgreSQLConnection) {
       throw err;
     }
   }
-  
+
   console.log("✅ Todas as migrations foram executadas!\n");
 }
 
@@ -79,7 +75,7 @@ function listRoutes(http: ExpressHttp) {
 async function bootstrap() {
   try {
     console.log("1️⃣  Conectando ao banco de dados...");
-    
+
     const connection = new PostgreSQLConnection({
       user: process.env.DB_USERNAME ?? "",
       password: process.env.DB_PASSWORD ?? "",
@@ -106,15 +102,15 @@ async function bootstrap() {
     listRoutes(http);
 
     const PORT = process.env.PORT ? Number(process.env.PORT) : 8000;
-    
+
     console.log(`5️⃣  Iniciando servidor na porta ${PORT}...`);
     await http.listen(PORT);
-    
+
     console.log("\n" + "=".repeat(50));
     console.log(`✅ Server running on http://localhost:${PORT}`);
     console.log("✅ Bootstrap concluído com sucesso!");
     console.log("=".repeat(50) + "\n");
-    
+
     console.log("🔐 Middleware de autenticação ativo");
     console.log("📝 Pronto para receber requisições!\n");
 

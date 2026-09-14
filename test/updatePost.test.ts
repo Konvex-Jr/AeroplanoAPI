@@ -1,9 +1,9 @@
 import RepositoryFactoryInterface from "../source/domain/Interfaces/RepositoryFactoryInterface";
 import MemoryRepositoryFactory from "../source/infra/repository/MemoryRepositoryFactory";
-import CreatePost from "../source/services/createPost/CreatePost";
-import CreatePostInput from "../source/services/createPost/CreatePostInput";
-import UpdatePost from "../source/services/updatePost/UpdatePost";
-import UpdatePostInput from "../source/services/updatePost/UpdatePostInput";
+import CreatePost from "../source/useCases/createPost/CreatePost";
+import CreatePostInput from "../source/useCases/createPost/CreatePostInput";
+import UpdatePost from "../source/useCases/updatePost/UpdatePost";
+import UpdatePostInput from "../source/useCases/updatePost/UpdatePostInput";
 
 const fakePdf = Buffer.from("%PDF-fake");
 

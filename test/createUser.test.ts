@@ -1,4 +1,4 @@
-import CreateUser from "../source/services/createUser/CreateUser";
+import CreateUser from "../source/useCases/createUser/CreateUser";
 import RepositoryFactoryInterface from "../source/domain/Interfaces/RepositoryFactoryInterface";
 import MemoryRepositoryFactory from "../source/infra/repository/MemoryRepositoryFactory";
 

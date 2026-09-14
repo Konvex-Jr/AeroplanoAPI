@@ -1,7 +1,7 @@
 import RepositoryFactoryInterface from "../source/domain/Interfaces/RepositoryFactoryInterface";
 import MemoryRepositoryFactory from "../source/infra/repository/MemoryRepositoryFactory";
-import CreateUser from "../source/services/createUser/CreateUser";
-import LoginUser from "../source/services/loginUser/LoginUser";
+import CreateUser from "../source/useCases/createUser/CreateUser";
+import LoginUser from "../source/useCases/loginUser/LoginUser";
 
 describe("LoginUser use case", () => {
     let loginUser: LoginUser;

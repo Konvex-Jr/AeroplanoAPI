@@ -2,8 +2,6 @@ import UserRepositoryInterface from "../../domain/Interfaces/UserRepositoryInter
 import UserRepositoryMemory from "./memory/UserRepositoryMemory";
 import PostRepositoryInterface from "../../domain/Interfaces/PostRepositoryInterface";
 import PostRepositoryMemory from "./memory/PostRepositoryMemory";
-import PartnerPostRepositoryInterface from "../../domain/Interfaces/PartnerPostRepositoryInterface";
-import PartnerPostRepositoryMemory from "./memory/PartnerPostRepositoryMemory";
 
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface";
 
@@ -11,12 +9,10 @@ export default class MemoryRepositoryFactory implements RepositoryFactoryInterfa
 
     readonly userRepository: UserRepositoryInterface;
     readonly postRepository: PostRepositoryInterface;
-    readonly partnerPostRepository: PartnerPostRepositoryInterface;
 
     constructor() {
         this.userRepository = new UserRepositoryMemory();
         this.postRepository = new PostRepositoryMemory();
-        this.partnerPostRepository = new PartnerPostRepositoryMemory();
     }
 
     createPostRepository(): PostRepositoryInterface {
@@ -27,7 +23,4 @@ export default class MemoryRepositoryFactory implements RepositoryFactoryInterfa
         return this.userRepository;
     }
 
-    createPartnerPostRepository(): PartnerPostRepositoryInterface {
-        return this.partnerPostRepository;
-    }
 }

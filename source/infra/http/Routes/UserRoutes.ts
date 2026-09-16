@@ -4,7 +4,7 @@ import UserController from "../../controller/UserController";
 import Http from "../Http";
 import ModelRoutes from "./ModelRoutes";
 import adminAuth from "../Middleware/AdminAuth";
-import { RegisterSchema, LoginSchema, UpdateUsernameSchema } from "../schemas";
+import { RegisterSchema, LoginSchema } from "../schemas";
 
 export default class UserRoutes implements ModelRoutes {
 

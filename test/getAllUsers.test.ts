@@ -16,7 +16,7 @@ describe("GetAllUsers UseCase", () => {
   });
 
   test("deve retornar todos os usuários", async () => {
-    
+
     const input = {
       id: "1",
       email: "a@gmail.com",

@@ -6,8 +6,6 @@ import DatabaseRepositoryFactory from "./infra/repository/DatabaseRepositoryFact
 import ExpressAuth from "./infra/http/Middleware/AuthExpress";
 import CreateUsersTable from "./infra/migrations/01.create_users_table";
 import CreatePostsTable from "./infra/migrations/02.create_posts_table";
-import CreatePostContentsTable from "./infra/migrations/04.create_post_contents_table";
-import BackfillUsernames from "./infra/migrations/06.backfill_usernames";
 
 config();
 
@@ -18,7 +16,7 @@ console.log({
   DB_PORT: process.env.DB_PORT,
   DB_DATABASE: process.env.DB_DATABASE,
   DB_USERNAME: process.env.DB_USERNAME ? "***" : "não definido",
-  PORT: process.env.PORT || 5432,
+  PORT: process.env.PORT || 8000,
 });
 
 async function runMigrations(connection: PostgreSQLConnection) {
@@ -27,8 +25,6 @@ async function runMigrations(connection: PostgreSQLConnection) {
   const migrations = [
     { name: "users", instance: new CreateUsersTable(connection) },
     { name: "posts", instance: new CreatePostsTable(connection) },
-    { name: "post_contents", instance: new CreatePostContentsTable(connection) },
-    { name: "backfill_usernames", instance: new BackfillUsernames(connection) }
   ];
 
   for (const migration of migrations) {

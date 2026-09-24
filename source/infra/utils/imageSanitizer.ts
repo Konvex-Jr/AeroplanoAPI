@@ -3,6 +3,10 @@ import AppError from "../../domain/AppError";
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
+// A capa é guardada como base64 dentro do próprio post e a listagem devolve todas
+// de uma vez, então limitamos a largura para não inflar a resposta.
+const MAX_IMAGE_WIDTH = 1600;
+
 const VALID_PREFIXES: { prefix: string; format: keyof FormatEnum }[] = [
     { prefix: "data:image/jpeg", format: "jpeg" },
     { prefix: "data:image/png", format: "png" },
@@ -22,6 +26,8 @@ export async function validateAndSanitizeImage(image: string): Promise<string> {
     let outputBuffer: Buffer;
     try {
         outputBuffer = await sharp(inputBuffer)
+            .rotate() // aplica a orientação EXIF antes dos metadados serem descartados
+            .resize({ width: MAX_IMAGE_WIDTH, withoutEnlargement: true })
             .toFormat(match.format)
             .toBuffer();
     } catch {

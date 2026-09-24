@@ -4,7 +4,6 @@ export default interface PostRepositoryInterface {
     save(post: Post): Promise<Post | null>;
     getAll(): Promise<Post[]>;
     findById(id: string): Promise<Post | null>;
-    findContentById(id: string): Promise<Buffer | null>;
     findByDate(search: Date): Promise<Post[] | null>;
     update(id: string, title: string, description: string, image: string): Promise<Post>;
     delete(id: string): Promise<string | null>;

@@ -3,8 +3,6 @@ import MemoryRepositoryFactory from "../source/infra/repository/MemoryRepository
 import CreatePost from "../source/useCases/createPost/CreatePost";
 import CreatePostInput from "../source/useCases/createPost/CreatePostInput";
 
-const fakePdf = Buffer.from("%PDF-fake");
-
 describe("CreatePost UseCase", () => {
 
   let createPost: CreatePost
@@ -23,10 +21,7 @@ describe("CreatePost UseCase", () => {
     const input: CreatePostInput = {
       title: "title-test",
       description: "description-test",
-      image: "",
-      content: fakePdf,
-      file_size: fakePdf.length,
-      original_filename: "test.pdf"
+      image: "asdasdasda",
     }
 
     const response = await createPost.execute(input)
@@ -42,10 +37,7 @@ describe("CreatePost UseCase", () => {
     const input: CreatePostInput = {
       title: "",
       description: "description-test",
-      image: "",
-      content: fakePdf,
-      file_size: fakePdf.length,
-      original_filename: "test.pdf"
+      image: "asdasd",
     }
 
     expect(async () => {

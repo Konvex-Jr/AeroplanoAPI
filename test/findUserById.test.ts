@@ -23,9 +23,9 @@ describe("FindUserById UseCase", () => {
   });
 
   test("deve encontrar um usuário pelo ID", async () => {
-    
+
     const inputUser = { id: "1", email: "john.doe@example.com", password: "senha12345678" };
-    
+
     const acessToken = await createUser.execute(inputUser)
 
     const userID = {
@@ -35,6 +35,6 @@ describe("FindUserById UseCase", () => {
     const findedUser = await findUserById.execute(userID)
 
     expect(findedUser).toBeDefined()
-    
+
   });
 });

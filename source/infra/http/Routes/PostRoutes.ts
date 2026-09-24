@@ -3,9 +3,8 @@ import RepositoryFactory from "../../../domain/Interfaces/RepositoryFactoryInter
 import PostController from "../../controller/PostController";
 import Http from "../Http";
 import ModelRoutes from "./ModelRoutes";
-import adminAuth from "../Middleware/AdminAuth";
-import multerUpload from "../Middleware/MulterConfig";
 import { CreatePostSchema, UpdatePostSchema } from "../schemas";
+import requireAdmin from "../Middleware/requireAdmin";
 
 export default class PostRoutes implements ModelRoutes {
 
@@ -17,14 +16,14 @@ export default class PostRoutes implements ModelRoutes {
 
     init(): void {
 
-        // CREATE POST - multipart/form-data, admin only
-        this.http.route("post", "/api/posts", true, async (params: any, body: any, user: any, req: any, res: any) => {
-            const parsed = CreatePostSchema.safeParse(req.body);
+        // CREATE POST - JSON { title, description, image (data URI base64) }, admin only
+        this.http.route("post", "/api/posts", true, async (_params: any, body: any, _user: any, _req: any, res: any) => {
+            const parsed = CreatePostSchema.safeParse(body);
             if (!parsed.success) throw new AppError(parsed.error.errors[0].message);
-            const result = await this.postController.create(parsed.data, req.file, user);
+            const result = await this.postController.create(parsed.data);
             res.status(201).json(result);
             return null;
-        }, [adminAuth, multerUpload.single("pdf")]);
+        }, requireAdmin);
 
         // GET POSTS - public
         this.http.route("get", "/api/posts", false, async (params: any) => {
@@ -37,23 +36,18 @@ export default class PostRoutes implements ModelRoutes {
         // GET POST BY ID - admin only
         this.http.route("get", "/api/posts/:id", true, async (params: any) => {
             return await this.postController.findById(params);
-        }, adminAuth);
+        }, requireAdmin);
 
-        // STREAM PDF - public
-        this.http.route("get", "/api/posts/:id/pdf", false, async (params: any, _body: any, _user: any, req: any, res: any) => {
-            return await this.postController.streamPdf(params.id, req, res);
-        });
-
-        // UPDATE POST - admin only
+        // UPDATE POST - admin only (image opcional: sem ela, mantém a capa atual)
         this.http.route("put", "/api/posts/:id", true, async (params: any, body: any) => {
             const parsed = UpdatePostSchema.safeParse(body);
             if (!parsed.success) throw new AppError(parsed.error.errors[0].message);
             return await this.postController.update(params, parsed.data);
-        }, adminAuth);
+        }, requireAdmin);
 
         // DELETE POST - admin only
         this.http.route("delete", "/api/posts/:id", true, async (params: any, _body: any, user: any) => {
             return await this.postController.delete(params, user);
-        }, adminAuth);
+        }, requireAdmin);
     }
 }

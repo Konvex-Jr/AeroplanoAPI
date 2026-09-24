@@ -23,17 +23,6 @@ export default class UserRoutes implements ModelRoutes {
 
     init(): void {
 
-        // CREATE USER
-        this.http.route("post", "/api/auth/register", false, async (_params: any, body: any, _user: any, _req: any, res: any) => {
-            const parsed = RegisterSchema.safeParse(body);
-            if (!parsed.success) throw new AppError(parsed.error.errors[0].message);
-            const result = await this.userController.createUser(parsed.data);
-            const { accessToken, ...payload } = result as any;
-            this.setCookies(res, accessToken, payload);
-            res.status(201).json({ message: "Usuário criado com sucesso" });
-            return null;
-        });
-
         // LOGIN
         this.http.route("post", "/api/auth/login", false, async (_params: any, body: any, _user: any, _req: any, res: any) => {
             const parsed = LoginSchema.safeParse(body);
@@ -48,6 +37,6 @@ export default class UserRoutes implements ModelRoutes {
         // GET USERS — admin only
         this.http.route("get", "/api/users", true, async () => {
             return this.userController.getAll();
-        }, adminAuth)
+        }, requireAdmin)
     }
 }

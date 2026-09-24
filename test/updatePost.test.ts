@@ -10,10 +10,7 @@ const fakePdf = Buffer.from("%PDF-fake");
 const baseInput: CreatePostInput = {
   title: "title-test",
   description: "description-test",
-  image: "",
-  content: fakePdf,
-  file_size: fakePdf.length,
-  original_filename: "test.pdf"
+  image: "asd",
 };
 
 describe("UpdatePost UseCase", () => {

@@ -4,8 +4,6 @@ import CreatePost from "../source/useCases/createPost/CreatePost";
 import CreatePostInput from "../source/useCases/createPost/CreatePostInput";
 import GetAllPosts from "../source/useCases/getAllPosts/GetAllPosts";
 
-const fakePdf = Buffer.from("%PDF-fake");
-
 describe("GetAllPosts UseCase", () => {
   let repositoryFactory: RepositoryFactoryInterface;
   let createPost: CreatePost;
@@ -19,8 +17,8 @@ describe("GetAllPosts UseCase", () => {
 
   test("deve retornar todos os posts", async () => {
     const inputs: CreatePostInput[] = [
-      { title: "title-test", description: "description-test", image: "", content: fakePdf, file_size: fakePdf.length, original_filename: "a.pdf" },
-      { title: "title-test2", description: "description-test2", image: "", content: fakePdf, file_size: fakePdf.length, original_filename: "b.pdf" }
+      { title: "title-test", description: "description-test", image: "asd" },
+      { title: "title-test2", description: "description-test2", image: "asd" }
     ];
 
     for (const input of inputs) {

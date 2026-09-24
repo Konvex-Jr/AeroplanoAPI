@@ -2,49 +2,54 @@ import AppError from "../../../domain/AppError";
 import Post from "../../../domain/Entity/Post";
 import PostRepositoryInterface from "../../../domain/Interfaces/PostRepositoryInterface";
 
+// Mesma ideia do repositório de banco: datas ficam só na "tabela", fora da entidade.
+interface PostRecord {
+    post: Post;
+    created_at: Date;
+    deleted_at: Date | null;
+}
+
+const dayKey = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
 export default class PostRepositoryMemory implements PostRepositoryInterface {
 
-    private posts: Post[] = [];
+    private records: PostRecord[] = [];
+
+    private alive(): PostRecord[] {
+        return this.records.filter(r => !r.deleted_at);
+    }
 
     async save(post: Post): Promise<Post> {
-        this.posts.push(post);
+        this.records.push({ post, created_at: new Date(), deleted_at: null });
         return post;
     }
 
     async findById(id: string): Promise<Post | null> {
-        return this.posts.find(p => p.id === id && !p.deleted_at) ?? null;
-    }
-
-    async findContentById(id: string): Promise<Buffer | null> {
-        const post = this.posts.find(p => p.id === id);
-        return post?.content ?? null;
+        return this.alive().find(r => r.post.id === id)?.post ?? null;
     }
 
     async findByDate(search: Date): Promise<Post[] | null> {
-        const date_search = `${search.getFullYear()}-${(search.getMonth() + 1).toString().padStart(2, '0')}-${search.getDate()}`;
-        return this.posts.filter(p => {
-            const created_str = `${p.created_at.getFullYear()}-${(p.created_at.getMonth() + 1).toString().padStart(2, '0')}-${p.created_at.getDate()}`;
-            return date_search === created_str && !p.deleted_at;
-        });
+        const wanted = dayKey(search);
+        return this.alive().filter(r => dayKey(r.created_at) === wanted).map(r => r.post).reverse();
     }
 
     async getAll(): Promise<Post[]> {
-        return this.posts.filter(p => !p.deleted_at);
+        // Mais novos primeiro, igual ao ORDER BY created_at DESC do banco.
+        return this.alive().map(r => r.post).reverse();
     }
 
     async update(id: string, title: string, description: string, image: string): Promise<Post> {
-        const index = this.posts.findIndex(p => p.id === id);
-        if (index === -1) throw new AppError("Post não encontrado");
-        const old = this.posts[index];
-        this.posts[index] = new Post(title, description, image, old.file_size, old.original_filename, old.created_at, new Date(), old.deleted_at, old.id, old.username, old.content);
-        return this.posts[index];
+        const record = this.alive().find(r => r.post.id === id);
+        if (!record) throw new AppError("Post não encontrado");
+        record.post = new Post(title, description, image, id);
+        return record.post;
     }
 
     async delete(id: string): Promise<string | null> {
-        const index = this.posts.findIndex(p => p.id === id);
-        if (index === -1) return null;
-        const old = this.posts[index];
-        this.posts[index] = new Post(old.title, old.description, old.image, old.file_size, old.original_filename, old.created_at, old.updated_at, new Date(), old.id, old.username, old.content);
+        const record = this.alive().find(r => r.post.id === id);
+        if (!record) return null;
+        record.deleted_at = new Date();
         return "Post deletado com sucesso";
     }
 }

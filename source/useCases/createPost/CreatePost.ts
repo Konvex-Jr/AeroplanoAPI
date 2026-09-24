@@ -15,19 +15,13 @@ export default class CreatePost {
 
     async execute(input: CreatePostInput): Promise<CreatePostOutput> {
         if (!input.title) throw new AppError("Título é obrigatório");
+        if (!input.description) throw new AppError("Descrição é obrigatória");
+        if (!input.image) throw new AppError("Imagem de capa é obrigatória");
 
         const post = new Post(
             input.title,
             input.description,
-            input.image,
-            input.file_size,
-            input.original_filename,
-            new Date(),
-            new Date(),
-            null,
-            undefined,
-            input.username ?? '',
-            input.content
+            input.image
         );
 
         await this.postRepository.save(post);

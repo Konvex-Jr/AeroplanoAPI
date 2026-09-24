@@ -1,8 +1,5 @@
 import AppError from "../../domain/AppError";
 import RepositoryFactoryInterface from "../../domain/Interfaces/RepositoryFactoryInterface";
-import CreateUser from "../../useCases/createUser/CreateUser";
-import CreateUserInput from "../../useCases/createUser/CreateUserInput";
-import CreateUserOutput from "../../useCases/createUser/CreateUserOutput";
 import FindUserById from "../../useCases/findUserById/FindUserById";
 import FindUserByIdInput from "../../useCases/findUserById/FindUserByIdInput";
 import FindUserByIdOutput from "../../useCases/findUserById/FindUserByIdOutput";
@@ -14,11 +11,6 @@ import LoginUserInput from "../../useCases/loginUser/LoginUserInput";
 export default class UserController {
 
     constructor(protected repositoryFactory: RepositoryFactoryInterface) {
-    }
-
-    async createUser(input: CreateUserInput): Promise<CreateUserOutput> {
-        const createUser = new CreateUser(this.repositoryFactory);
-        return await createUser.execute(input);
     }
 
     async login(input: LoginUserInput): Promise<{ accessToken: string }> {

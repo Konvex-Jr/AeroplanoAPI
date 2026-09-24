@@ -3,7 +3,6 @@ import RepositoryFactory from "../../../domain/Interfaces/RepositoryFactoryInter
 import UserController from "../../controller/UserController";
 import Http from "../Http";
 import ModelRoutes from "./ModelRoutes";
-import adminAuth from "../Middleware/requireAdmin";
 import { LoginSchema } from "../schemas";
 import requireAdmin from "../Middleware/requireAdmin";
 

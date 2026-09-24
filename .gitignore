@@ -6,3 +6,6 @@ coverage/
 dist/
 .env
 todo.md
+
+generateUUID.js
+generatePasswordHash.js

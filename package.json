@@ -32,6 +32,7 @@
     "version": "0.0.1",
     "description": "ArchitectureTemplate",
     "main": "dist/source/main.js",
+    "type": "module",
     "author": "perozin.arthur@gmail.com",
     "scripts": {
         "test": "jest --runInBand test/",
